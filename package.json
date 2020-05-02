@@ -21,7 +21,8 @@
     "dev": "nodemon --exec babel-node ./src/app.js",
     "db:setup": "sequelize db:create && sequelize db:migrate",
     "clean": "rm -rf build && mkdir build",
-    "build": "npm run clean && babel src -d ./build --ignore ./node_modules"
+    "build": "npm run clean && babel src -d ./build --ignore ./node_modules",
+    "lint:fix": "eslint --fix \"src/*\" --ignore-path .gitignore ."
   },
   "author": {
     "name": "Build For SDG",
