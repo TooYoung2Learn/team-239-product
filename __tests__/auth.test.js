@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 /* eslint-disable handle-callback-err */
 const chai = require('chai');
@@ -22,7 +23,7 @@ describe('Authentications test', () => {
       .end((err, res) => {
         done();
       });
-  })
+  });
   describe('Sign up', () => {
     it('Should fail if name is not provided', (done) => {
       chai

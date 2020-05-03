@@ -1,6 +1,5 @@
 /* eslint-disable no-useless-escape */
 import validator from 'validator';
-import models from '../models';
 import { ErrorHandler } from '../helpers/error';
 
 export const validateSignUp = (req, res, next) => {

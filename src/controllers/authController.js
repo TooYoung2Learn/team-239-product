@@ -37,8 +37,9 @@ const Auth = {
    * @param {*} next
    */
   async signIn(req, res, next) {
+    const { email, password } = req.body;
+
     try {
-      const { email, password } = req.body;
       const user = await User.findOne({ where: { email } });
 
       if (!user) {
