@@ -1,6 +1,4 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-/* eslint-disable handle-callback-err */
+/* eslint-disable no-undef, handle-callback-err, no-unused-vars */
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 

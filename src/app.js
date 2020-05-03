@@ -26,7 +26,7 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 4000;
 
 app.listen(port, (err) => {
-  if (err && err.status >= 400) {
+  if (err) {
     return console.log(err);
   }
   return console.log(`Server running on http://localhost:${port}`);
