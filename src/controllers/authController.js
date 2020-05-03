@@ -13,10 +13,10 @@ const Auth = {
    * @param {*} next
    */
   async signUp(req, res, next) {
-    try {
-      const { name, email, password } = req.body;
-      const hashPassword = bcrypt.hashSync(password, 10);
+    const { name, email, password } = req.body;
+    const hashPassword = bcrypt.hashSync(password, 10);
 
+    try {
       const user = await User.findOne({ where: { email } });
       if (user) {
         throw new ErrorHandler(409, 'An account with that email exist already');
