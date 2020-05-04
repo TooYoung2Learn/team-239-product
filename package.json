@@ -13,13 +13,16 @@
     "test": "__tests__"
   },
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cover": "jest --coverage",
+    "pretest": "cross-env NODE_ENV=test npm run db:refresh",
+    "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --timeout 15000 ./__tests__/*.test.js --exit",
+    "test:watch": "mocha --watch",
+    "test:cover": "mocha --coverage",
     "lint": "eslint \"src/**/*.js\"",
     "start": "node ./build/app.js",
     "dev": "nodemon --exec babel-node ./src/app.js",
     "db:setup": "sequelize db:create && sequelize db:migrate",
+    "db:setup:test": "cross-env NODE_ENV=test npm run db:setup",
+    "db:refresh": "sequelize db:migrate:undo:all && sequelize db:migrate",
     "clean": "rm -rf build && mkdir build",
     "build": "npm run clean && babel src -d ./build --ignore ./node_modules",
     "lint:fix": "eslint --fix \"src/*\" --ignore-path .gitignore ."
@@ -38,29 +41,49 @@
   },
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.3",
-    "sequelize": "^5.21.7"
+    "sequelize": "^5.21.7",
+    "validator": "^13.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.5",
+    "@babel/register": "^7.9.0",
     "babel-jest": "^25.4.0",
     "babel-node": "0.0.1-security",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
     "jest": "^25.4.0",
+    "mocha": "^7.1.2",
+    "nyc": "^15.0.1",
     "parcel-bundler": "^1.12.4",
     "pg": "^8.0.3",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "supertest": "^4.0.2"
   },
   "browserslist": [
     "last 1 Chrome versions"
-  ]
+  ],
+  "nyc": {
+    "exclude": [
+      "src/config/config.js",
+      "src/models/index.js",
+      "src/routes/index.js",
+      "node_modules"
+    ],
+    "cache": false
+  }
 }
