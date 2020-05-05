@@ -5,12 +5,15 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       email: DataTypes.STRING,
-      password: DataTypes.STRING
+      password: DataTypes.STRING,
+      communityId: DataTypes.INTEGER,
+      role: DataTypes.ENUM('admin', 'user')
     },
     {}
   );
-  User.associate = (/* models */) => {
+  User.associate = (models) => {
     // associations can be defined here
+    User.belongsTo(models.Community, { as: 'community', foreignKey: 'communityId' });
   };
   // Remove the password so that it won't get returned during sign in/sign up
   User.prototype.toJSON = function () {
