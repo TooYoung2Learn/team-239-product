@@ -3,6 +3,14 @@ import { ErrorHandler } from '../helpers/error';
 
 const { Community } = models;
 
+const findCommunityByPk = async (communityId) => {
+  const community = await Community.findByPk(communityId);
+  if (!community) {
+    throw new ErrorHandler(404, 'The community with that Id is not found');
+  }
+  return community;
+};
+
 const Communities = {
   /**
    *  Create a community
@@ -23,7 +31,7 @@ const Communities = {
 
   async fetchAll(req, res, next) {
     try {
-      const communities = await Community.findAll();
+      const communities = await Community.findAll({ order: [['createdAt', 'DESC']] });
       return res.status(200).send({ communities });
     } catch (err) {
       return next(err);
@@ -34,11 +42,7 @@ const Communities = {
     const { communityId } = params;
 
     try {
-      const community = await Community.findByPk(communityId);
-
-      if (!community) {
-        throw new ErrorHandler(404, 'The community with that Id is not found');
-      }
+      const community = await findCommunityByPk(communityId);
       return res.status(200).send({ community });
     } catch (err) {
       return next(err);
@@ -50,11 +54,7 @@ const Communities = {
     const { name, description, image } = body;
 
     try {
-      const community = await Community.findByPk(communityId);
-
-      if (!community) {
-        throw new ErrorHandler(404, 'The community with that Id is not found');
-      }
+      const community = await findCommunityByPk(communityId);
 
       const updatedCommunity = await community.update({
         name: name || community.name,
@@ -71,11 +71,7 @@ const Communities = {
     const { communityId } = params;
 
     try {
-      const community = await Community.findByPk(communityId);
-
-      if (!community) {
-        throw new ErrorHandler(404, 'The community with that Id is not found');
-      }
+      const community = await findCommunityByPk(communityId);
 
       await community.destroy();
       return res.status(200).send({});

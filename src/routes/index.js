@@ -22,8 +22,8 @@ const routes = (app) => {
   app.post('/api/communities', verifyLoggedInUser, verifyAdminUser, Communities.create);
   app.get('/api/communities', Communities.fetchAll);
   app.get('/api/communities/:communityId', Communities.fetchOne);
-  app.put('/api/communities/:communityId', Communities.update);
-  app.delete('/api/communities/:communityId', Communities.delete);
+  app.put('/api/communities/:communityId', verifyLoggedInUser, verifyAdminUser, Communities.update);
+  app.delete('/api/communities/:communityId', verifyLoggedInUser, verifyAdminUser, Communities.delete);
 };
 
 export default routes;
