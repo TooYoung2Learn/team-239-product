@@ -24,7 +24,9 @@ export const verifyLoggedInUser = (req, res, next) => {
     req.decoded = decoded;
     // Verify that the user is in the database
     User.findByPk(decoded.userId).then((existingUser) => {
-      if (!existingUser) throw new ErrorHandler(403, 'User doesn\'t exist');
+      if (!existingUser) {
+        throw new ErrorHandler(403, "User doesn't exist");
+      }
       next();
     }).catch((error) => next(error));
   });
