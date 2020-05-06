@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import models from '../models';
 import { ErrorHandler } from '../helpers/error';
 import { createToken } from '../helpers/jwt';
+import { hash } from '../helpers';
 
 const { User } = models;
 
@@ -13,8 +14,10 @@ const Auth = {
    * @param {*} next
    */
   async signUp(req, res, next) {
-    const { name, email, password } = req.body;
-    const hashPassword = bcrypt.hashSync(password, 10);
+    const {
+      name, email, password, role
+    } = req.body;
+    const hashPassword = hash(password);
 
     try {
       const user = await User.findOne({ where: { email } });
@@ -22,7 +25,9 @@ const Auth = {
         throw new ErrorHandler(409, 'An account with that email exist already');
       }
 
-      const newUser = await User.create({ name, email, password: hashPassword });
+      const newUser = await User.create({
+        name, email, password: hashPassword, role
+      });
       const token = createToken(newUser);
       return res.status(201).send({ token, user: newUser });
     } catch (err) {

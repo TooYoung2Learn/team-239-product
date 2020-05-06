@@ -16,6 +16,20 @@ module.exports = {
     password: {
       type: Sequelize.STRING
     },
+    role: {
+      type: Sequelize.ENUM('admin', 'user'),
+      defaultValue: 'user'
+    },
+    communityId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Communities',
+        key: 'id'
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

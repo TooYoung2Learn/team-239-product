@@ -19,10 +19,10 @@
     "test:cover": "mocha --coverage",
     "lint": "eslint \"src/**/*.js\"",
     "start": "node ./build/app.js",
-    "dev": "nodemon --exec babel-node ./src/app.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node ./src/app.js",
     "db:setup": "sequelize db:create && sequelize db:migrate",
     "db:setup:test": "cross-env NODE_ENV=test npm run db:setup",
-    "db:refresh": "sequelize db:migrate:undo:all && sequelize db:migrate",
+    "db:refresh": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all",
     "clean": "rm -rf build && mkdir build",
     "build": "npm run clean && babel src -d ./build --ignore ./node_modules",
     "lint:fix": "eslint --fix \"src/*\" --ignore-path .gitignore ."

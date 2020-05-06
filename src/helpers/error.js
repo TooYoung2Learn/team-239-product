@@ -16,7 +16,12 @@ export class ErrorHandler extends Error {
  */
 export const handleError = (err, res) => {
   const { statusCode, message } = err;
-  return res.status(statusCode).send({
+  if (statusCode) {
+    return res.status(statusCode).send({
+      error: message
+    });
+  }
+  return res.status(500).send({
     error: message
   });
 };
