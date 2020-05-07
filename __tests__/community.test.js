@@ -84,8 +84,8 @@ describe('Community test', () => {
         .request(app)
         .get(`/api/communities/${1000}`)
         .end((err, res) => {
-          expect(res).to.have.status(404);
-          expect(res.body).to.have.property('error').eql('The community with that Id is not found');
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('error');
           done();
         });
     });
