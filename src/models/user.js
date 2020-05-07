@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     User.belongsTo(models.Community, { as: 'community', foreignKey: 'communityId' });
   };
+
   // Remove the password so that it won't get returned during sign in/sign up
   User.prototype.toJSON = function () {
     const values = { ...this.get() };

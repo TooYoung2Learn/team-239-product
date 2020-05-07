@@ -9,6 +9,7 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('Authentications test', () => {
+  let token = '';
   before((done) => {
     chai
       .request(app)
@@ -19,9 +20,38 @@ describe('Authentications test', () => {
         password: 'password1'
       })
       .end((err, res) => {
+        token = res.body.token;
         done();
       });
   });
+
+  describe('Join Community test', () => {
+    it('Should fail if id is invalid', (done) => {
+      chai
+        .request(app)
+        .get(`/api/auth/join/communities/${1000}`)
+        .set('authorization', `Bearer ${token}`)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.have.property('error').eql('Community with that ID is not in our database');
+          done();
+        });
+    });
+
+    it('Should pass if id is valid', (done) => {
+      chai
+        .request(app)
+        .get(`/api/auth/join/communities/${3}`)
+        .set('authorization', `Bearer ${token}`)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.property('token');
+          expect(res.body).to.have.property('user');
+          done();
+        });
+    });
+  });
+
   describe('Sign up', () => {
     it('Should fail if name is not provided', (done) => {
       chai

@@ -27,7 +27,17 @@ module.exports = {
         model: 'Communities',
         key: 'id'
       },
-      onDelete: 'CASCADE',
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE'
+    },
+    associationId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Associations',
+        key: 'id'
+      },
+      onDelete: 'SET NULL',
       onUpdate: 'CASCADE'
     },
     createdAt: {

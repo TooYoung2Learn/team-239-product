@@ -14,7 +14,7 @@
   },
   "scripts": {
     "pretest": "cross-env NODE_ENV=test npm run db:refresh",
-    "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --timeout 15000 ./__tests__/*.test.js --exit",
+    "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --timeout 15000 ./__tests__/index.js --exit",
     "test:watch": "mocha --watch",
     "test:cover": "mocha --coverage",
     "lint": "eslint \"src/**/*.js\"",

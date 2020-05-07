@@ -4,7 +4,7 @@ import { ErrorHandler } from '../helpers/error';
 import { createToken } from '../helpers/jwt';
 import { hash } from '../helpers';
 
-const { User } = models;
+const { User, Community } = models;
 
 const Auth = {
   /**
@@ -56,6 +56,30 @@ const Auth = {
 
       const token = createToken(user);
       return res.status(200).json({ token, user });
+    } catch (err) {
+      return next(err);
+    }
+  },
+
+  /**
+   *  Adds user to a community
+   * @param {object} req
+   * @param {object} res
+   * @param {*} next
+   */
+  async joinCommunity(req, res, next) {
+    const { email } = req.decoded;
+    const { communityId } = req.params;
+
+    try {
+      const community = await Community.findByPk(communityId);
+      if (!community) {
+        throw new ErrorHandler(404, 'Community with that ID is not in our database');
+      }
+      const user = await User.findOne({ where: { email } });
+      const updatedUser = await user.update({ communityId });
+      const token = createToken(updatedUser);
+      return res.status(200).send({ token, user: updatedUser });
     } catch (err) {
       return next(err);
     }
