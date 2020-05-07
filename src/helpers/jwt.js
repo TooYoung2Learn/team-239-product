@@ -3,16 +3,16 @@ import { config } from 'dotenv';
 
 config();
 
-export const createToken = (user) => {
-  const {
-    id, email, name, role
-  } = user;
+export const createToken = ({
+  id, email, name, role, communityId
+}) => {
   const token = jwt.sign(
     {
       userId: id,
       email,
       name,
-      role
+      role,
+      communityId
     },
     process.env.JWT_SECRET
   );

@@ -21,7 +21,7 @@ export const handleError = (err, res) => {
       error: message
     });
   }
-  return res.status(500).send({
+  return res.status(400).send({
     error: message
   });
 };

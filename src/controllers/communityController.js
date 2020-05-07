@@ -4,11 +4,15 @@ import { ErrorHandler } from '../helpers/error';
 const { Community } = models;
 
 const findCommunityByPk = async (communityId) => {
-  const community = await Community.findByPk(communityId);
-  if (!community) {
-    throw new ErrorHandler(404, 'The community with that Id is not found');
+  try {
+    const community = await Community.findByPk(communityId);
+    if (!community) {
+      throw new ErrorHandler(400, 'The community with that Id is not found');
+    }
+    return community;
+  } catch (err) {
+    throw new Error(err);
   }
-  return community;
 };
 
 const Communities = {
@@ -18,8 +22,8 @@ const Communities = {
    * @param {object} res
    * @param {function} next
    */
-  async create({ body }, res, next) {
-    const { name, description, image } = body;
+  async create(req, res, next) {
+    const { name, description, image } = req.body;
 
     try {
       const community = await Community.create({ name, description, image });
@@ -31,7 +35,7 @@ const Communities = {
 
   async fetchAll(req, res, next) {
     try {
-      const communities = await Community.findAll({ order: [['createdAt', 'DESC']] });
+      const communities = await Community.findAll();
       return res.status(200).send({ communities });
     } catch (err) {
       return next(err);
