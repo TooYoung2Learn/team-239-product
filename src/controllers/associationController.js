@@ -50,8 +50,8 @@ const Associations = {
 
   async fetchAll(req, res, next) {
     try {
-      // Write your code here
-      return res.status(200).send({});
+      const associations = await Association.findAll();
+      return res.status(200).send({ associations });
     } catch (err) {
       return next(err);
     }
@@ -68,10 +68,21 @@ const Associations = {
     }
   },
 
-  async update(req, res, next) {
+  async update({ params, body }, res, next) {
+    const { associationId } = params;
+    const {
+      name, description, image, chairman
+    } = body;
+
     try {
-      // write your code here
-      return res.status(200).send({});
+      const association = await findAssociationByPk(associationId);
+      const updatedAssociation = await association.update({
+        name: name || association.name,
+        description: description || association.description,
+        image: image || association.image,
+        chairman: chairman || association.chairman
+      });
+      return res.status(200).send({ association: updatedAssociation });
     } catch (err) {
       return next(err);
     }

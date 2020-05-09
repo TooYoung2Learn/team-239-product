@@ -129,13 +129,14 @@ describe('Association test', () => {
       chai
         .request(app)
         .put(`/api/associations/${1}`)
+        .set('authorization', `Bearer ${communityToken}`)
         .send({
           name: 'updated association'
         })
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.have.property('association').to.be.an('object');
-          expect(res.body.community.name).eql('updated association');
+          expect(res.body.association.name).eql('updated association');
           done();
         });
     });
