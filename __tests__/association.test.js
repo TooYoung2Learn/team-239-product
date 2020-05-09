@@ -145,6 +145,7 @@ describe('Association test', () => {
       chai
         .request(app)
         .delete(`/api/associations/${3}`)
+        .set('authorization', `Bearer ${communityToken}`)
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.an('object');
