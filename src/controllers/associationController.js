@@ -88,9 +88,11 @@ const Associations = {
     }
   },
 
-  async delete(req, res, next) {
+  async delete({params}, res, next) {
+      const {associationId} = params;
     try {
-      // Write your code here
+      const association = await findAssociationByPk(associationId);
+      await association.destroy();
       return res.status(200).send({});
     } catch (err) {
       return next(err);
