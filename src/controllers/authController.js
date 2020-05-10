@@ -8,10 +8,12 @@ const { User, Community, Association } = models;
 
 const Auth = {
   /**
-   *  Register a user to the database
-   * @param {object} req
-   * @param {object} res
-   * @param {*} next
+   * @description Register a user to the database
+   * @param {object} req request object coming from the client
+   * @param {object} res response object from the server
+   * @param {function} next a function that passes control to the next middleware
+   * @returns returns a response object containing the user and his token or the
+   * control function, next if an error arises
    */
   async signUp(req, res, next) {
     const {
@@ -39,10 +41,12 @@ const Auth = {
   },
 
   /**
-   *  signs in a user to the application
-   * @param {object} req
-   * @param {object} res
-   * @param {*} next
+   * @description signs in a user to the application
+   * @param {object} req request object coming from the client
+   * @param {object} res response object from the server
+   * @param {function} next a function that passes control to the next middleware
+   * @returns returns a response object containing the user and his token or the
+   * control function, next if an error arises
    */
   async signIn(req, res, next) {
     const { email, password } = req.body;
@@ -65,10 +69,12 @@ const Auth = {
   },
 
   /**
-   *  Adds user to a community
-   * @param {object} req
-   * @param {object} res
-   * @param {*} next
+   * @description Adds user to a community
+   * @param {object} req request object coming from the client
+   * @param {object} res response object from the server
+   * @param {function} next a function that passes control to the next middleware
+   * @returns returns a response object containing the user and his token or the
+   * control function, next if an error arises
    */
   async joinCommunity(req, res, next) {
     const { email } = req.decoded;
@@ -88,6 +94,14 @@ const Auth = {
     }
   },
 
+  /**
+   * @description Adds a user as member of an association
+   * @param {object} req request object coming from the client
+   * @param {object} res response object from the server
+   * @param {function} next a function that passes control to the next middleware
+   * @returns returns a response object containing the user and his token or the
+   * control function, next if an error arises
+   */
   async joinAssociation(req, res, next) {
     const { email } = req.decoded;
     const { associationId } = req.params;
@@ -99,7 +113,8 @@ const Auth = {
       }
       const user = await User.findOne({ where: { email } });
       const updatedUser = await user.update({
-        associationId, communityId: association.communityId
+        associationId,
+        communityId: association.communityId
       });
       const token = createToken(updatedUser);
       return res.status(200).send({ token, user: updatedUser });
