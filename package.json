@@ -13,6 +13,7 @@
     "test": "__tests__"
   },
   "scripts": {
+    "test-with-coverage": "istanbul cover npm t --report lcovonly -- -R=html && cat ./coverage/lcov.info | codacy-coverage && rm -rf ./coverage",
     "pretest": "cross-env NODE_ENV=test npm run db:refresh",
     "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --timeout 15000 ./__tests__/index.js --exit",
     "test:watch": "mocha --watch",
@@ -65,12 +66,15 @@
     "babel-node": "0.0.1-security",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "codacy-coverage": "^3.4.0",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
+    "istanbul": "^0.4.5",
     "jest": "^25.4.0",
     "mocha": "^7.1.2",
+    "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^15.0.1",
     "parcel-bundler": "^1.12.4",
     "pg": "^8.0.3",
