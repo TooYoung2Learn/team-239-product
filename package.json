@@ -13,19 +13,20 @@
     "test": "__tests__"
   },
   "scripts": {
+    "test-with-coverage": "istanbul cover npm t --report lcovonly -- -R=html && cat ./coverage/lcov.info | codacy-coverage && rm -rf ./coverage",
     "pretest": "cross-env NODE_ENV=test npm run db:refresh",
     "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --timeout 15000 ./__tests__/index.js --exit",
     "test:watch": "mocha --watch",
-    "test:cover": "mocha --coverage",
+    "test:cover": "babel-node ./node_modules/mocha/mocha.js ./__tests__/index.js --coverage",
     "lint": "eslint \"src/**/*.js\"",
-    "start": "node ./build/app.js",
+    "lint:fix": "eslint --fix \"src/**/*.js\" --ignore-path .gitignore .",
+    "start": "node ./dist/app.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec babel-node ./src/app.js",
     "db:setup": "sequelize db:create && sequelize db:migrate",
     "db:setup:test": "cross-env NODE_ENV=test npm run db:setup",
     "db:refresh": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all",
-    "clean": "rm -rf build && mkdir build",
-    "build": "npm run clean && babel src -d ./build --ignore ./node_modules",
-    "lint:fix": "eslint --fix \"src/*\" --ignore-path .gitignore ."
+    "clean": "rm -rf dist && mkdir dist",
+    "build": "npm run clean && babel src -d ./dist --ignore ./node_modules"
   },
   "author": {
     "name": "Build For SDG",
@@ -43,12 +44,16 @@
   "dependencies": {
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
+    "cloudinary": "^1.21.0",
     "cors": "^2.8.5",
+    "datauri": "^3.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "nodemon": "^2.0.3",
+    "sequelize": "^5.21.7",
     "validator": "^13.0.0"
   },
   "devDependencies": {
@@ -61,16 +66,18 @@
     "babel-node": "0.0.1-security",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "codacy-coverage": "^3.4.0",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
+    "istanbul": "^0.4.5",
     "jest": "^25.4.0",
     "mocha": "^7.1.2",
+    "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^15.0.1",
     "parcel-bundler": "^1.12.4",
     "pg": "^8.0.3",
-    "sequelize": "^5.21.7",
     "sequelize-cli": "^5.5.1",
     "supertest": "^4.0.2"
   },
@@ -82,7 +89,8 @@
       "src/config/config.js",
       "src/models/index.js",
       "src/routes/index.js",
-      "node_modules"
+      "node_modules",
+      "src/models"
     ],
     "cache": false
   }

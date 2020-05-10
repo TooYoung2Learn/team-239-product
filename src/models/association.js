@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Association.hasMany(models.User, { as: 'users', foreignKey: 'associationId' });
     Association.belongsTo(models.Community, { as: 'community', foreignKey: 'communityId' });
+    Association.hasMany(models.Product, { as: 'products', foreignKey: 'associationId' });
   };
   return Association;
 };

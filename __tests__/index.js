@@ -1,3 +1,4 @@
-import './auth.test';
-import './community.test';
-import './association.test';
+require('./auth.test');
+require('./community.test');
+require('./association.test');
+require('./product.test');

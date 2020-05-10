@@ -3,12 +3,16 @@ import { validateSignUp, validateSignIn } from '../middlewares/authentication';
 import Communities from '../controllers/communityController';
 import { verifyLoggedInUser, verifyAdminUser } from '../middlewares/authorizations';
 import Associations from '../controllers/associationController';
+import Products from '../controllers/productController';
+import { multerUploads } from '../middlewares/multer';
+import { cloudinaryConfig } from '../config/cloudinaryConfig';
 
 /**
  *
  * @param {*} app
  */
 const routes = (app) => {
+  app.use('*', cloudinaryConfig);
   app.get('/', (req, res) => res.status(200).send({ message: 'Welcome to our API' }));
 
   /**
@@ -17,24 +21,34 @@ const routes = (app) => {
   app.post('/api/auth/sign_up', validateSignUp, Auth.signUp);
   app.post('/api/auth/sign_in', validateSignIn, Auth.signIn);
   app.get('/api/auth/join/communities/:communityId', verifyLoggedInUser, Auth.joinCommunity);
+  app.get('/api/auth/join/associations/:associationId', verifyLoggedInUser, Auth.joinAssociation);
 
   /**
    * COMMUNITIES' ENDPOINTS
    */
-  app.post('/api/communities', verifyLoggedInUser, verifyAdminUser, Communities.create);
+  app.post('/api/communities', verifyLoggedInUser, verifyAdminUser, multerUploads, Communities.create);
   app.get('/api/communities', Communities.fetchAll);
   app.get('/api/communities/:communityId', Communities.fetchOne);
-  app.put('/api/communities/:communityId', verifyLoggedInUser, verifyAdminUser, Communities.update);
+  app.put('/api/communities/:communityId', verifyLoggedInUser, verifyAdminUser, multerUploads, Communities.update);
   app.delete('/api/communities/:communityId', verifyLoggedInUser, verifyAdminUser, Communities.delete);
 
   /**
    * ASSOCIATIONS' ENDPOINTS
    */
-  app.post('/api/associations', verifyLoggedInUser, Associations.create);
+  app.post('/api/associations', verifyLoggedInUser, multerUploads, Associations.create);
   app.get('/api/associations', Associations.fetchAll);
   app.get('/api/associations/:associationId', Associations.fetchOne);
-  app.put('/api/associations/:associationId', verifyLoggedInUser, Associations.update);
+  app.put('/api/associations/:associationId', verifyLoggedInUser, multerUploads, Associations.update);
   app.delete('/api/associations/:associationId', verifyLoggedInUser, Associations.delete);
+
+  /**
+   * PRODUCTS' ENDPOINTS
+   */
+  app.post('/api/products', verifyLoggedInUser, Products.create);
+  app.get('/api/products', Products.fetchAll);
+  app.get('/api/products/:productId', Products.fetchById);
+  app.put('/api/products/:productId', verifyLoggedInUser, Products.update);
+  app.delete('/api/products/:productId', verifyLoggedInUser, Products.delete);
 };
 
 export default routes;
