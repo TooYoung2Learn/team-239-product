@@ -13,18 +13,18 @@ module.exports = {
     description: {
       type: Sequelize.TEXT
     },
-    image: {
-      type: Sequelize.STRING
+    images: {
+      type: Sequelize.ARRAY(Sequelize.STRING)
     },
     state: {
-      type: Sequelize.ENUM('inprogress', 'completed'),
+      type: Sequelize.ENUM('inprogress', 'completed', 'sold'),
       defaultValue: 'inprogress'
     },
     investorId: {
       type: Sequelize.INTEGER,
       allowNull: true
     },
-    userId: {
+    farmerId: {
       type: Sequelize.INTEGER,
       allowNull: true,
       references: {

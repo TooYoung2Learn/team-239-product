@@ -1,11 +1,11 @@
 import models from '../models';
 import { ErrorHandler } from '../helpers/error';
 
-const { Association, Community } = models;
+const { Association, Community, Product } = models;
 
-const findAssociationByPk = async (associationId) => {
+const findAssociationByPk = async (associationId, include = {}) => {
   try {
-    const association = await Association.findByPk(associationId);
+    const association = await Association.findByPk(associationId, include);
     if (!association) {
       throw new ErrorHandler(404, 'The association with that Id is not found');
     }
@@ -50,7 +50,12 @@ const Associations = {
 
   async fetchAll(req, res, next) {
     try {
-      const associations = await Association.findAll();
+      const associations = await Association.findAll({
+        include: [{
+          model: Product,
+          as: 'products'
+        }]
+      });
       return res.status(200).send({ associations });
     } catch (err) {
       return next(err);
@@ -61,7 +66,12 @@ const Associations = {
     const { associationId } = params;
 
     try {
-      const association = await findAssociationByPk(associationId);
+      const association = await findAssociationByPk(associationId, {
+        include: [{
+          model: Product,
+          as: 'products'
+        }]
+      });
       return res.status(200).send({ association });
     } catch (err) {
       return next(err);
@@ -81,6 +91,11 @@ const Associations = {
         description: description || association.description,
         image: image || association.image,
         chairman: chairman || association.chairman
+      }, {
+        include: [{
+          model: Product,
+          as: 'products'
+        }]
       });
       return res.status(200).send({ association: updatedAssociation });
     } catch (err) {
@@ -88,8 +103,8 @@ const Associations = {
     }
   },
 
-  async delete({params}, res, next) {
-      const {associationId} = params;
+  async delete({ params }, res, next) {
+    const { associationId } = params;
     try {
       const association = await findAssociationByPk(associationId);
       await association.destroy();

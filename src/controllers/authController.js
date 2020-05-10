@@ -4,7 +4,7 @@ import { ErrorHandler } from '../helpers/error';
 import { createToken } from '../helpers/jwt';
 import { hash } from '../helpers';
 
-const { User, Community } = models;
+const { User, Community, Association } = models;
 
 const Auth = {
   /**
@@ -26,7 +26,10 @@ const Auth = {
       }
 
       const newUser = await User.create({
-        name, email, password: hashPassword, role
+        name,
+        email,
+        password: hashPassword,
+        role
       });
       const token = createToken(newUser);
       return res.status(201).send({ token, user: newUser });
@@ -78,6 +81,26 @@ const Auth = {
       }
       const user = await User.findOne({ where: { email } });
       const updatedUser = await user.update({ communityId });
+      const token = createToken(updatedUser);
+      return res.status(200).send({ token, user: updatedUser });
+    } catch (err) {
+      return next(err);
+    }
+  },
+
+  async joinAssociation(req, res, next) {
+    const { email } = req.decoded;
+    const { associationId } = req.params;
+
+    try {
+      const association = await Association.findByPk(associationId);
+      if (!association) {
+        throw new ErrorHandler(404, 'Association with that ID is not in our database');
+      }
+      const user = await User.findOne({ where: { email } });
+      const updatedUser = await user.update({
+        associationId, communityId: association.communityId
+      });
       const token = createToken(updatedUser);
       return res.status(200).send({ token, user: updatedUser });
     } catch (err) {

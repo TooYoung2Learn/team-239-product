@@ -1,11 +1,11 @@
 import models from '../models';
 import { ErrorHandler } from '../helpers/error';
 
-const { Community } = models;
+const { Community, Association } = models;
 
-const findCommunityByPk = async (communityId) => {
+const findCommunityByPk = async (communityId, include = {}) => {
   try {
-    const community = await Community.findByPk(communityId);
+    const community = await Community.findByPk(communityId, include);
     if (!community) {
       throw new ErrorHandler(400, 'The community with that Id is not found');
     }
@@ -35,7 +35,12 @@ const Communities = {
 
   async fetchAll(req, res, next) {
     try {
-      const communities = await Community.findAll();
+      const communities = await Community.findAll({
+        include: [{
+          model: Association,
+          as: 'associations'
+        }]
+      });
       return res.status(200).send({ communities });
     } catch (err) {
       return next(err);
@@ -46,7 +51,12 @@ const Communities = {
     const { communityId } = params;
 
     try {
-      const community = await findCommunityByPk(communityId);
+      const community = await findCommunityByPk(communityId, {
+        include: [{
+          model: Association,
+          as: 'associations'
+        }]
+      });
       return res.status(200).send({ community });
     } catch (err) {
       return next(err);
@@ -64,6 +74,11 @@ const Communities = {
         name: name || community.name,
         description: description || community.description,
         image: image || community.image
+      }, {
+        include: [{
+          model: Association,
+          as: 'associations'
+        }]
       });
       return res.status(200).send({ community: updatedCommunity });
     } catch (err) {

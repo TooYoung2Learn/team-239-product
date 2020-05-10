@@ -3,6 +3,7 @@ import { validateSignUp, validateSignIn } from '../middlewares/authentication';
 import Communities from '../controllers/communityController';
 import { verifyLoggedInUser, verifyAdminUser } from '../middlewares/authorizations';
 import Associations from '../controllers/associationController';
+import Products from '../controllers/productController';
 
 /**
  *
@@ -17,6 +18,7 @@ const routes = (app) => {
   app.post('/api/auth/sign_up', validateSignUp, Auth.signUp);
   app.post('/api/auth/sign_in', validateSignIn, Auth.signIn);
   app.get('/api/auth/join/communities/:communityId', verifyLoggedInUser, Auth.joinCommunity);
+  app.get('/api/auth/join/associations/:associationId', verifyLoggedInUser, Auth.joinAssociation);
 
   /**
    * COMMUNITIES' ENDPOINTS
@@ -35,6 +37,15 @@ const routes = (app) => {
   app.get('/api/associations/:associationId', Associations.fetchOne);
   app.put('/api/associations/:associationId', verifyLoggedInUser, Associations.update);
   app.delete('/api/associations/:associationId', verifyLoggedInUser, Associations.delete);
+
+  /**
+   * PRODUCTS' ENDPOINTS
+   */
+  app.post('/api/products', verifyLoggedInUser, Products.create);
+  app.get('/api/products', Products.fetchAll);
+  app.get('/api/products/:productId', Products.fetchById);
+  app.put('/api/products/:productId', verifyLoggedInUser, Products.update);
+  app.delete('/api/products/:productId', verifyLoggedInUser, Products.delete);
 };
 
 export default routes;

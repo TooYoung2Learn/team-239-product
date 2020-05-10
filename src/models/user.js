@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = (models) => {
     // associations can be defined here
     User.belongsTo(models.Community, { as: 'community', foreignKey: 'communityId' });
-    User.hasMany(models.Product, { as: 'products', foreignKey: 'userId' });
+    User.hasMany(models.Product, { as: 'products', foreignKey: 'farmerId' });
   };
 
   // Remove the password so that it won't get returned during sign in/sign up

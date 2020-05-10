@@ -49,6 +49,7 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.3",
+    "sequelize": "^5.21.7",
     "validator": "^13.0.0"
   },
   "devDependencies": {
@@ -70,7 +71,6 @@
     "nyc": "^15.0.1",
     "parcel-bundler": "^1.12.4",
     "pg": "^8.0.3",
-    "sequelize": "^5.21.7",
     "sequelize-cli": "^5.5.1",
     "supertest": "^4.0.2"
   },
