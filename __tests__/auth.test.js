@@ -52,6 +52,33 @@ describe('Authentications test', () => {
     });
   });
 
+  describe('Join Association test', () => {
+    it('Should fail if id is invalid', (done) => {
+      chai
+        .request(app)
+        .get(`/api/auth/join/associations/${1000}`)
+        .set('authorization', `Bearer ${token}`)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.have.property('error').eql('Association with that ID is not in our database');
+          done();
+        });
+    });
+
+    it('Should pass if id is valid', (done) => {
+      chai
+        .request(app)
+        .get(`/api/auth/join/associations/${3}`)
+        .set('authorization', `Bearer ${token}`)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.property('token');
+          expect(res.body).to.have.property('user');
+          done();
+        });
+    });
+  });
+
   describe('Sign up', () => {
     it('Should fail if name is not provided', (done) => {
       chai

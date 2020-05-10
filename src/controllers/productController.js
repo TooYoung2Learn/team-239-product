@@ -92,6 +92,9 @@ const Products = {
       name, description, images, state, investorId, farmerId
     } = body;
     try {
+      if (!Array.isArray(images)) {
+        throw new ErrorHandler(400, 'images should be an array');
+      }
       const product = await Product.findByPk(productId);
       if (!product) {
         throw new ErrorHandler(400, 'Wrong product ID');
@@ -99,7 +102,7 @@ const Products = {
       const updatedProduct = await product.update({
         name: name || product.name,
         description: description || product.description,
-        images: [...product.images, ...images],
+        images: images && images.length ? product.images.concat(images) : product.images,
         state: state || product.state,
         investorId: investorId || product.investorId,
         farmerId: farmerId || product.farmerId
